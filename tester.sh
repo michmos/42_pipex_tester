@@ -8,11 +8,11 @@ tester_setup
 
 
 # -- TEST -------------------------------------------------------------------------------#
-# print_header "BASIC CHECKS"
-# test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
+print_header "BASIC CHECKS"
+test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
 # test "infiles/basic.txt" "ls -la" "cat -e" "outfiles/outfile"
 # test "infiles/basic.txt" "ls -l -a" "cat -e -n" "outfiles/outfile"
-# test "infiles/basic.txt" "grep -A5 is" "cat -e" "outfi+at0U&.hxv,d{-,^les/nonexistingfile"
+# test "infiles/basic.txt" "grep -A5 is" "cat -e" "nonexistingfile"
 # test "infiles/empty.txt" "grep nonexistingword" "cat -e" "outfiles/outfile"
 #
 # print_header "ERROR CHECKING"
@@ -35,19 +35,13 @@ tester_setup
 # 	test "infiles/basic.txt" "cat -e" "" "outfiles/outfile"
 # 	test "infiles/basic.txt" "cat -e" "cat -e" ""
 # LEAKS_ONLY=0
-#
+
 # print_header "BONUS"
 # test "infiles/basic.txt" "cat -e" "cat -e" "cat -e" "outfiles/outfile"
 # # 100 times cat -e
 # test "infiles/basic.txt" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "outfiles/outfile"
-# here_doc
-# eval "cat -e << EOF | cat  -e >> outfile
-# HELLO
-# HELLO
-# HELLO
-# EOF"
-HERE_DOC=$'Hello\nHello\nHello\nEOF'
-test "here_doc" "EOF" "cat -e" "cat -e" "outfile"
+# HERE_DOC=$'Hello\nHello\nHello\nEOF'
+# test "here_doc" "EOF" "cat -e" "cat -e" "outfiles/outfile"
 
 
 # -- ERROR_OUTPUT -----------------------------------------------------------------------#
