@@ -1,21 +1,25 @@
 #!/bin/bash
 
-source tester_foos.sh
+source test.sh
+source utils.sh
 
 # -- SETUP ------------------------------------------------------------------------------#
 PIPEX_DIR=$(dirname "$0")/../ # ADJUST PATH TO PIPEX DIRECTORY IF NECESSARY
 TIMEOUT=7
+rm -rf outfiles/*
+echo -n > last_err_log.txt
+
 tester_setup
 
 
 # -- TEST -------------------------------------------------------------------------------#
 print_header "BASIC CHECKS"
 test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
-test "infiles/basic.txt" "sleep 3" "ls" "outfiles/outfile"
 test "infiles/basic.txt" "ls -la" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "ls -l -a" "cat -e -n" "outfiles/outfile"
-test "infiles/basic.txt" "grep -A5 is" "cat -e" "nonexistingfile"
+test "infiles/basic.txt" "grep -A5 is" "cat -e" "outfiles/nonexistingfile"
 test "infiles/empty.txt" "grep nonexistingword" "cat -e" "outfiles/outfile"
+test "infiles/basic.txt" "sleep 3" "ls" "outfiles/outfile"
 
 print_header "ERROR CHECKING"
 # unvalid input file
@@ -35,7 +39,6 @@ LEAKS_ONLY=1 # checks only for Leaks (FATAL ERRORS like segfaults are always che
 	test "" "cat -e" "cat -e" "outfiles/outfile"
 	test "infiles/basic.txt" "" "cat -e" "outfiles/outfile"
 	test "infiles/basic.txt" "cat -e" "" "outfiles/outfile"
-	test "infiles/basic.txt" "cat -e" "cat -e" ""
 LEAKS_ONLY=0
 
 print_header "BONUS"

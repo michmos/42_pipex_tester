@@ -1,14 +1,4 @@
 
-BOLD="\033[1m"
-BLACK="\033[30;1m"
-RED="\033[31;1m"
-GREEN="\033[32;1m"
-YELLOW="\033[33;1m"
-MAGENTA="\033[35;1m"
-RESET="\033[0m"
-
-DELIMITER="------------------------------------------------------------------------------------------------------------------------"
-
 PIPEX_DIR=""
 
 TEST_NUM=1
@@ -38,7 +28,7 @@ test () {
 
 	printf "#%2i: %-85.83s" "${TEST_NUM}" "$(print_arg_array)"
 	if (( ${#ARG_ARRAY[@]} < 4 )) && (( LEAKS_ONLY == 0 )); then
-		printf "${RED}NOT ENOUGH ARGS FOR COMPARISON. ACTIVATE LEAKS_ONLY OR ADD ARGS\n${RESET}"; return
+		printf "${RED}UNVALID TESTCASE: NOT ENOUGH ARGS FOR COMPARISON. ACTIVATE LEAKS_ONLY OR ADD ARGS\n${RESET}"; return
 	fi
 
 	# construct command line for og piping
@@ -86,10 +76,10 @@ ${HERE_DOC}" 2> /dev/null
 	local exit_status_og=$?
 	local time_og=$SECONDS
 
-	# print results
+	# get and print results
 	if (( exit_status_my > 128 )); then printf "${RED}------- FATAL ERROR -------\n${RESET}"; return; fi
 	if (( LEAKS_ONLY == 0 )); then
-		if [[ ! -f $OUTPUTFILE ]]; then printf "${RED}DIDN'T CREATE OUTPUTFILE${RESET}\n"; return; fi
+		if [[ ! -f $OUTPUTFILE ]]; then printf "${RED}-- DIDN'T CREATE OUTFILE --\n${RESET}"; return; fi
 		result_output
 		result_ex_stat "${exit_status_my}" "${exit_status_og}"
 		result_time ${time_my} ${time_og}
@@ -153,59 +143,4 @@ result_leaks() {
 		printf "\n"
 	fi
 	rm "${temp_file}"
-}
-
-print_arg_array() {
-	local size=${#ARG_ARRAY[@]}
-	for ((i=0; i<$size; i++)); do
-		printf "\"%s\" " "${ARG_ARRAY[i]}"
-	done
-}
-
-print_err_log () {
-	printf "$RED$BOLD\nERRORS:$RESET\n"
-	cat last_err_log.txt
-}
-
-tester_setup() {
-	rm pipex
-	# compiling
-	make -C ${PIPEX_DIR} all
-	printf "\n"
-	cp ${PIPEX_DIR}pipex ./ 2> /dev/null
-	if [ -f "${PIPEX_DIR}pipex" ] && [ -x "${PIPEX_DIR}pipex" ];then
-		printf "%-20s$GREEN%-8s$RESET\n" "compiling" "[OK]"
-	else
-		printf "%-20s$RED%-8s  \"pipex\" not found. Control that correct path is set in tester file$RESET\n\n" "compiling" "[KO]"; exit 1
-	fi
-
-	# norminette
-	if type "norminette" > /dev/null 2>&1; then
-		if norminette ${PIPEX_DIR} | grep "Error!" | wc -l > /dev/null; then
-			printf "%-20s$RED%-8s$RESET\n" "norminette" "[KO]"
-		else
-			printf "%-20s$GREEN%-8s$RESET\n" "norminette" "[OK]"
-		fi
-	else
-		printf "$RED$BOLD norminette not found $RESET"
-	fi
-
-	echo -n > last_err_log.txt
-	printf "\n\n$BOLD$MAGENTA%-90s%-8s%-8s%-8s%-8s\n$RESET" "Testname" "Out" "Exit" "Time" "Leaks"
-
-	exec 2> /dev/null
-}
-
-print_test_case() {
-	printf "${RED}%s\n" "$DELIMITER" 
-	printf "test %i:\n${RESET}" ${TEST_NUM}
-
-	printf "${BOLD}./pipex "
-	print_arg_array
-
-	printf "\n%s\n\n${RESET}" "${ARG_STR}"
-}
-
-print_header() {
-	printf "${YELLOW}\n%s\n${RESET}" "$1"
 }
