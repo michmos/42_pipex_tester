@@ -15,8 +15,7 @@ TEST_NUM=1
 ERROR_FLAG=0
 LEAKS_ONLY=0
 
-
-HERE_DOC=""
+HERE_DOC=''
 HERE_DOC_FLAG=0
 
 OUTPUTFILE=""
@@ -37,6 +36,12 @@ test () {
 		HERE_DOC_FLAG=0
 	fi
 
+	printf "#%2i: %-85.83s" "${TEST_NUM}" "$(print_arg_array)"
+	if (( ${#ARG_ARRAY[@]} < 4 )) && (( LEAKS_ONLY == 0 )); then
+		printf "${RED}NOT ENOUGH ARGS FOR COMPARISON. ACTIVATE LEAKS_ONLY OR ADD ARGS\n${RESET}"; return
+	fi
+
+	# construct command line for og piping
 	if (( HERE_DOC_FLAG == 1 )); then
 		ARG_STR="${ARG_ARRAY[2]} << ${ARG_ARRAY[1]}"
 		for ((i=3; i<${#ARG_ARRAY[@]} - 1; i++));do
@@ -51,6 +56,7 @@ test () {
 		ARG_STR+=" > ${OUTPUTFILE1}"
 	fi
 
+	# make sure outputfiles are identical before testing and have necessary permissions
 	if [ -f "$OUTPUTFILE1" ]; then
 		rm -rf $OUTPUTFILE1
 	fi
@@ -60,31 +66,35 @@ test () {
 		cp $OUTPUTFILE $OUTPUTFILE1
 	fi
 
-	printf "#%2i: %-85.83s" "${TEST_NUM}" "$(print_arg_array)"
-
-	if (( ${#ARG_ARRAY[@]} < 4 )) && (( LEAKS_ONLY == 0 )); then 
-		printf "${RED}NOT ENOUGH ARGS FOR COMPARISON. ACTIVATE LEAKS_ONLY OR ADD ARGS\n${RESET}"; return
-	fi
-
-	# ./pipex "${ARG_ARRAY[@]}" 2>/dev/null
-	eval ./pipex "${ARG_ARRAY[@]}" 2>/dev/null
+	# execute mine and get time and exit status
+	SECONDS=0
+	timeout $TIMEOUT ./pipex "${ARG_ARRAY[@]}" < <(echo "${HERE_DOC}") &
+	local pid=$!
+	wait $pid
 	local exit_status_my=$?
-	if (( HERE_DOC_FLAG == 0 )); then
-		eval "$ARG_STR" 2>/dev/null
-	else
-		eval "${ARG_STR}
-${HERE_DOC}" 2>/dev/null # TODO: Continue here
+	local time_my=$SECONDS
+	if (( exit_status_my == 124 )); then
+		printf "${RED}---------- TIMEOUT ----------\n${RESET}"
+		if ps -p $pid > /dev/null; then kill $pid; fi
+		return
 	fi
+
+	# execute og and get time and exit status
+	SECONDS=0
+	eval "$ARG_STR
+${HERE_DOC}" 2> /dev/null
 	local exit_status_og=$?
+	local time_og=$SECONDS
 
-	if (( exit_status_my > 128 )); then printf "${RED}---- FATAL ERROR ----\n${RESET}"; return; fi
-
+	# print results
+	if (( exit_status_my > 128 )); then printf "${RED}------- FATAL ERROR -------\n${RESET}"; return; fi
 	if (( LEAKS_ONLY == 0 )); then
 		if [[ ! -f $OUTPUTFILE ]]; then printf "${RED}DIDN'T CREATE OUTPUTFILE${RESET}\n"; return; fi
 		result_output
 		result_ex_stat "${exit_status_my}" "${exit_status_og}"
+		result_time ${time_my} ${time_og}
 	else
-		printf "%16s" " "
+		printf "%24s" " "
 	fi
 	result_leaks
 
@@ -99,6 +109,7 @@ result_output() {
 		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
 		ERROR_FLAG=1
 		cat ${temp_file} >> last_err_log.txt
+		printf "\n" >> last_err_log.txt
 		printf "${RED}%-8s${RESET}" "[KO]"
 	fi
 	rm "${temp_file}"
@@ -116,10 +127,21 @@ result_ex_stat() {
 	fi
 }
 
+result_time() {
+	if (( $1 < $2 + 1 )) && (( $1 > $2 - 1 )); then
+		printf "${GREEN}%-8s${RESET}" "[OK]"
+	else
+		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
+		ERROR_FLAG=1
+		printf "${RED}%-8s${RESET}" "[KO]"
+		printf "Your execution time: %s\n" $1 >> last_err_log.txt
+		printf "Orig execution time: %s\n\n" $2 >> last_err_log.txt
+	fi
+}
+
 result_leaks() {
 	local temp_file=$(mktemp)
-	eval "valgrind --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" 
-"${HERE_DOC}" 2> "$temp_file""
+	eval "valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" < <(echo ${HERE_DOC})"
 	local exit_status=$?
 	if ((exit_status != 42)); then
 		printf "${GREEN}%-8s${RESET}\n" "[OK]"
@@ -127,7 +149,8 @@ result_leaks() {
 		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
 		ERROR_FLAG=1
 		printf "${RED}%-8s${RESET}\n" "[KO]"
-		cat "${temp_file}" >> last_err_log.txt
+		cat "${temp_file}" | grep 'HEAP SUMMARY' -A9 --max-count=1 >> last_err_log.txt
+		printf "\n"
 	fi
 	rm "${temp_file}"
 }
@@ -168,7 +191,7 @@ tester_setup() {
 	fi
 
 	echo -n > last_err_log.txt
-	printf "\n\n$BOLD$MAGENTA%-90s%-8s%-8s%-8s\n$RESET" "Testname" "Out" "Exit" "Leaks"
+	printf "\n\n$BOLD$MAGENTA%-90s%-8s%-8s%-8s%-8s\n$RESET" "Testname" "Out" "Exit" "Time" "Leaks"
 
 	exec 2> /dev/null
 }
