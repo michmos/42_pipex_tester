@@ -4,7 +4,9 @@ source test.sh
 source utils.sh
 
 # -- SETUP ------------------------------------------------------------------------------#
-PIPEX_DIR=$(dirname "$0")/../ # ADJUST PATH TO PIPEX DIRECTORY IF NECESSARY
+# ADJUST PATH TO PIPEX DIRECTORY IF NECESSARY (-> IF ITS NOT THE PARENT DIRCTORY)
+PIPEX_DIR=$(dirname "$0")/../
+
 TIMEOUT=7
 rm -rf outfiles/*
 echo -n > last_err_log.txt
@@ -50,4 +52,4 @@ test "here_doc" "EOF" "cat -e" "cat -e" "outfiles/outfile"
 
 
 # -- ERROR_OUTPUT -----------------------------------------------------------------------#
-if [ "$1" != --hide-errors ]; then print_err_logi; fi
+if [ "$1" != --hide-errors ]; then print_err_log; fi
