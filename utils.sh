@@ -54,7 +54,7 @@ tester_setup() {
 
 	# norminette
 	if type "norminette" > /dev/null 2>&1; then
-		if norminette ${PIPEX_DIR} | grep "Error!" | wc -l > /dev/null; then
+		if norminette ${PIPEX_DIR} | grep 'Error!' > /dev/null; then
 			printf "%-20s$RED%-8s$RESET\n" "norminette" "[KO]"
 		else
 			printf "%-20s$GREEN%-8s$RESET\n" "norminette" "[OK]"
