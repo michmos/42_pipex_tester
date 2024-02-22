@@ -11,13 +11,13 @@ echo -n > last_err_log.txt
 
 tester_setup
 
-
 # -- TEST -------------------------------------------------------------------------------#
 print_header "BASIC CHECKS"
 test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "ls -la" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "ls -l -a" "cat -e -n" "outfiles/outfile"
 test "infiles/basic.txt" "grep -A5 is" "cat -e" "outfiles/nonexistingfile"
+test "infiles/basic.txt" "cat -e" "grep nonexistingword" "outfiles/nonexistingfile"
 test "infiles/empty.txt" "grep nonexistingword" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "sleep 3" "ls" "outfiles/outfile"
 
@@ -50,4 +50,4 @@ test "here_doc" "EOF" "cat -e" "cat -e" "outfiles/outfile"
 
 
 # -- ERROR_OUTPUT -----------------------------------------------------------------------#
-if [ "$1" != --hide-errors ]; then print_err_log; fi
+if [ "$1" != --hide-errors ]; then print_err_logi; fi
