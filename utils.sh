@@ -43,9 +43,10 @@ tester_setup() {
 
 	# compiling
 	make -C ${PIPEX_DIR} all
+	make -C ${PIPEX_DIR} bonus
 	printf "\n"
-	cp ${PIPEX_DIR}pipex ./ 2> /dev/null
-	if [ -f "${PIPEX_DIR}pipex" ] && [ -x "${PIPEX_DIR}pipex" ];then
+	cp ${PIPEX_DIR}/pipex ./ 2> /dev/null
+	if [ -f "${PIPEX_DIR}/pipex" ] && [ -x "${PIPEX_DIR}/pipex" ];then
 		printf "%-20s$GREEN%-8s$RESET\n" "compiling" "[OK]"
 	else
 		printf "%-20s$RED%-8s  \"pipex\" not found. Control that correct path is set in tester file$RESET\n\n" "compiling" "[KO]"; exit 1
