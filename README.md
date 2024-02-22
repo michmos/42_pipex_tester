@@ -1,1 +1,38 @@
+# 42 pipex tester
+This is a tester for the project `pipex` from the core curriculum from ecole 42. It is designed to facilitate the addition of your own custom test cases.
 
+## Usage
+### Download
+Clone the repository **into your pipex directory**:
+```
+git clone git@github.com:michmos/42_pipex_tester.git && cd 42_pipex_tester
+```
+Alternatively, you can clone it elsewhere and adjust the relative path inside `run.sh`.
+
+Ensure you have a Makefile in place and that your program compiles to `pipex` (also the bonus, in case you did it).
+
+### Run
+```
+bash run.sh
+```
+By default, the tester displays information for each test case that fails. You can disable this optionally:
+```
+bash run.sh --hide-errors
+```
+
+## Layout
+The tester compares your program with the original shell piping in terms of:
+* **output** to the specified file
+* **exit status**
+* **time** - differences here may indicate that your parent is not waiting for all children to terminate
+* **leaks** in the parent
+
+![visualization](https://github.com/michmos/42_pipex_tester/assets/141367977/290d866f-3c3e-4c7d-84c5-2392036d4a15)
+
+## Adapt
+Test cases can easily be added to  `run.sh`  following the same structure as the existing ones.
+Two variables are available for customization:
+* `LEAKS_ONLY`: if set to 1, all subsequent test cases will only be checked for leaks and fatal errors, until it is reset to 0
+* `HERE_DOC`: a string used as input for here_doc. Ensure it ends with a \n
+
+If a test case receives less than 4 arguments without setting LEAKS_ONLY to 0, an error message will be displayed as the subject doesn't clarify how to handle these cases - naturally, your program shouldn't crash.
