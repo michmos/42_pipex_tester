@@ -53,19 +53,17 @@ test () {
 	if (( LEAKS_ONLY == 0 )) && [ -f "$OUTPUTFILE" ]; then
 		# read permissions are necessary for cp and diff operations
 		chmod u+r $OUTPUTFILE
+		echo -e "This is random text echoed into outfile before applying\npipex. This allows to verify whether your program and\nthe original successfully replace existing text" > $OUTPUTFILE
 		cp $OUTPUTFILE $OUTPUTFILE1
 	fi
 
 	# execute mine and get time and exit status
 	SECONDS=0
-	timeout $TIMEOUT ./pipex "${ARG_ARRAY[@]}" < <(echo "${HERE_DOC}") &
-	local pid=$!
-	wait $pid
+	timeout $TIMEOUT ./pipex "${ARG_ARRAY[@]}" < <(echo "${HERE_DOC}") > /dev/null
 	local exit_status_my=$?
 	local time_my=$SECONDS
 	if (( exit_status_my == 124 )); then
 		printf "${RED}---------- TIMEOUT ----------\n${RESET}"
-		if ps -p $pid > /dev/null; then kill $pid; fi
 		return
 	fi
 
@@ -118,7 +116,7 @@ result_ex_stat() {
 }
 
 result_time() {
-	if (( $1 < $2 + 1 )) && (( $1 > $2 - 1 )); then
+	if (( $1 <= $2 + 1 )) && (( $1 >= $2 - 1 )); then
 		printf "${GREEN}%-8s${RESET}" "[OK]"
 	else
 		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
@@ -131,16 +129,23 @@ result_time() {
 
 result_leaks() {
 	local temp_file=$(mktemp)
-	eval "valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" < <(echo ${HERE_DOC})"
+	local timeout=$(($TIMEOUT + 3))
+	timeout $TIMEOUT valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" < <(echo "${HERE_DOC}\n") > /dev/null
 	local exit_status=$?
-	if ((exit_status != 42)); then
+	if ((exit_status != 42)) && ((exit_status != 124)); then
 		printf "${GREEN}%-8s${RESET}\n" "[OK]"
 	else
 		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
 		ERROR_FLAG=1
-		printf "${RED}%-8s${RESET}\n" "[KO]"
-		cat "${temp_file}" | grep 'HEAP SUMMARY' -A9 --max-count=1 >> last_err_log.txt
-		printf "\n"
+		if ((exit_status == 42)); then
+			printf "${RED}%-8s${RESET}\n" "[KO]"
+			cat "${temp_file}" | grep 'HEAP SUMMARY' -A9 --max-count=1 >> last_err_log.txt
+			printf "\n" >> last_err_log.txt
+		else
+			printf "${RED}%-8s${RESET}\n" "[KO]"
+			printf "Valgrind timeouts" >> last_err_log.txt
+			printf "\n" >> last_err_log.txt
+		fi
 	fi
 	rm "${temp_file}"
 }
