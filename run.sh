@@ -8,7 +8,8 @@ source utils.sh
 PIPEX_DIR=$(dirname "$0")/../
 
 TIMEOUT=7
-rm -rf outfiles/*
+rm -rf outfiles
+mkdir outfiles
 echo -n > last_err_log.txt
 
 tester_setup
@@ -18,6 +19,8 @@ print_header "BASIC CHECKS"
 test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "ls -la" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "ls -l -a" "cat -e -n" "outfiles/outfile"
+test "infiles/basic.txt" "ls -l -a -f" "cat -e -n" "outfiles/outfile"
+test "infiles/basic.txt" "ls -laf" "cat -e -n" "outfiles/outfile"
 test "infiles/basic.txt" "grep -A5 is" "cat -e" "outfiles/nonexistingfile"
 test "infiles/basic.txt" "cat -e" "grep nonexistingword" "outfiles/nonexistingfile"
 test "infiles/empty.txt" "grep nonexistingword" "cat -e" "outfiles/outfile"

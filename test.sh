@@ -96,6 +96,7 @@ result_output() {
 	else
 		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
 		ERROR_FLAG=1
+		printf "${RED}%-64s${GREEN}%s${RESET}\n" "${OUTPUTFILE}:" "${OUTPUTFILE1}:"  >> last_err_log.txt
 		cat ${temp_file} >> last_err_log.txt
 		printf "\n" >> last_err_log.txt
 		printf "${RED}%-8s${RESET}" "[KO]"
