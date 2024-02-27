@@ -1,6 +1,8 @@
 # 42 pipex tester
 This is a tester for the project `pipex` from the core curriculum from ecole 42. It is designed to facilitate the addition of your own custom test cases.
 
+If the tester helps you I really appreciate if you could give a star. If you find a bug, send me a message please :)
+
 ## Usage
 ### Download
 Clone the repository **into your pipex directory**:
