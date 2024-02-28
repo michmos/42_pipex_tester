@@ -32,6 +32,10 @@ test "nonexistingfile" "cat -e" "cat -e" "outfiles/outfile"
 chmod 000 infiles/basic.txt
 	test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
 chmod 777 infiles/basic.txt
+# ouput file without permissions
+touch outfiles/outfile_without_permissions
+chmod 000 outfiles/outfile_without_permissions
+	test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile_without_permissions"
 # wrong argument
 test "infiles/basic.txt" "nonexistingcommand" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "cat -e" "cat -nonexistingflag" "outfiles/outfile"
