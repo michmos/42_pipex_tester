@@ -29,9 +29,9 @@ test "infiles/basic.txt" "sleep 3" "ls" "outfiles/outfile"
 print_header "ERROR CHECKING"
 # unvalid input file
 test "nonexistingfile" "cat -e" "cat -e" "outfiles/outfile"
-chmod 000 infiles/basic.txt
-	test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile"
-chmod 777 infiles/basic.txt
+touch infiles/infile_without_permissions
+chmod 000 infiles/infile_without_permissions
+	test "infiles/infile_without_permissions" "cat -e" "cat -e" "outfiles/outfile"
 # ouput file without permissions
 touch outfiles/outfile_without_permissions
 chmod 000 outfiles/outfile_without_permissions
