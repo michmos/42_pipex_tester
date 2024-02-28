@@ -53,7 +53,9 @@ test () {
 	if (( LEAKS_ONLY == 0 )) && [ -f "$OUTPUTFILE" ]; then
 		# read permissions are necessary for cp and diff operations
 		chmod u+r $OUTPUTFILE
-		echo -e "This is random text echoed into outfile before applying\npipex. This allows to verify whether your program and\nthe original successfully replace existing text" > $OUTPUTFILE
+		if [ -w "$OUTPUTFILE" ]; then
+			echo -e "This is random text echoed into existing outfiles before \napplying pipex. This allows to verify whether your program\n and the original successfully replace existing text" > $OUTPUTFILE
+		fi
 		cp $OUTPUTFILE $OUTPUTFILE1
 	fi
 
