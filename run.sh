@@ -25,6 +25,7 @@ test "infiles/basic.txt" "grep -A5 is" "cat -e" "outfiles/nonexistingfile"
 test "infiles/basic.txt" "cat -e" "grep nonexistingword" "outfiles/nonexistingfile"
 test "infiles/empty.txt" "grep nonexistingword" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "sleep 3" "ls" "outfiles/outfile"
+test "infiles/big_text.txt" "cat" "head -2" "outfiles/outfile"
 
 print_header "ERROR CHECKING"
 # unvalid input file
