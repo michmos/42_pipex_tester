@@ -1,7 +1,11 @@
 # 42 pipex tester
-This is a tester for the project `pipex` from the core curriculum from ecole 42. It is designed to facilitate the addition of your own custom test cases.
+This is a tester for the project `pipex` from the ecole 42 core curriculum. It is designed to facilitate the addition of your own custom test cases.
 
-If the tester helps you I really appreciate if you could give a star. If you find a bug, send me a message please :)
+> This tester is written **for linux**. There might be issues if you use a different OS :exclamation:
+
+> If the tester helps you I really appreciate if you could give a star :star:
+
+> If you find a bug, send me a message on slack please (@mmoser) :email:
 
 ## Usage
 ### Download
@@ -23,13 +27,13 @@ bash run.sh --hide-errors
 ```
 
 ## Layout
+![visualization](https://github.com/michmos/42_pipex_tester/assets/141367977/290d866f-3c3e-4c7d-84c5-2392036d4a15)
 The tester compares your program with the original shell piping in terms of:
 * **output** to the specified file
 * **exit status**
 * **time** - differences here may indicate that your parent is not waiting for all children to terminate
 * **leaks** in the parent
 
-![visualization](https://github.com/michmos/42_pipex_tester/assets/141367977/290d866f-3c3e-4c7d-84c5-2392036d4a15)
 
 ## Adapt
 Test cases can easily be added to  `run.sh`  following the same structure as the existing ones.
