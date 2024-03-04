@@ -39,6 +39,7 @@ chmod 000 outfiles/outfile_without_permissions
 	test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile_without_permissions"
 # wrong argument
 test "infiles/basic.txt" "nonexistingcommand" "cat -e" "outfiles/outfile"
+test "infiles/basic.txt" "cat -e" "nonexistingcommand" "outfiles/outfile"
 test "infiles/basic.txt" "cat -e" "cat -nonexistingflag" "outfiles/outfile"
 LEAKS_ONLY=1 # checks only for Leaks (FATAL ERRORS like segfaults are always checked)
 	# not enough arguments
