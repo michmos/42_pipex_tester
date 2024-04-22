@@ -11,7 +11,7 @@ This is a tester for the project `pipex` from the ecole 42 core curriculum. It i
 ### Download
 Clone the repository **into your pipex directory**:
 ```
-git clone git@github.com:michmos/42_pipex_tester.git && cd 42_pipex_tester
+git clone https://github.com/michmos/42_pipex_tester.git && cd 42_pipex_tester
 ```
 Alternatively, you can clone it elsewhere and adjust the relative path inside `run.sh`.
 
