@@ -133,7 +133,7 @@ result_time() {
 result_leaks() {
 	local temp_file=$(mktemp)
 	local timeout=$(($TIMEOUT + 3))
-	timeout $TIMEOUT valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" < <(echo "${HERE_DOC}\n") > /dev/null
+	timeout $TIMEOUT valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" < <(echo -n "${HERE_DOC}") > /dev/null
 	local exit_status=$?
 	if ((exit_status != 42)) && ((exit_status != 124)); then
 		printf "${GREEN}%-8s${RESET}\n" "[OK]"
