@@ -3,7 +3,7 @@ This is a tester for the project `pipex` from the ecole 42 core curriculum. It i
 
 > This tester is written **for linux**. There might be issues if you use a different OS :exclamation:
 
-> If the tester helps you I really appreciate if you could give a star :star:
+> If the tester helps you, leave a star on github to make it more visible for others :star:
 
 > If you find a bug, send me a message on slack please (@mmoser) :email:
 
