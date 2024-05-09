@@ -1,7 +1,7 @@
 
 PIPEX_DIR=""
 
-TEST_NUM=1
+TEST_NUM=0
 ERROR_FLAG=0
 LEAKS_ONLY=0
 
@@ -15,6 +15,7 @@ ARG_ARRAY=""
 ARG_STR=""
 
 test () {
+	TEST_NUM=$(( TEST_NUM + 1 ))
 	ARG_ARRAY=("$@")
 	OUTPUTFILE="${ARG_ARRAY[-1]}"
 	OUTPUTFILE1="${OUTPUTFILE}_tester"
@@ -87,8 +88,6 @@ ${HERE_DOC}" 2> /dev/null
 		printf "%24s" " "
 	fi
 	result_leaks
-
-	TEST_NUM=$(( TEST_NUM + 1 ))
 }
 
 result_output() {
