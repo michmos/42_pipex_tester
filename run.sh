@@ -29,7 +29,8 @@ test "infiles/big_text.txt" "cat" "head -2" "outfiles/outfile"
 
 print_header "ERROR CHECKING"
 # unvalid input file
-test "nonexistingfile" "cat -e" "cat -e" "outfiles/outfile"
+test "nonexistingfile" "cat -e" "ls" "outfiles/outfile"
+test "nonexistingfile" "cat" "sleep 3" "outfiles/outfile"
 touch infiles/infile_without_permissions
 chmod 000 infiles/infile_without_permissions
 	test "infiles/infile_without_permissions" "cat -e" "cat -e" "outfiles/outfile"
@@ -37,6 +38,8 @@ chmod 000 infiles/infile_without_permissions
 touch outfiles/outfile_without_permissions
 chmod 000 outfiles/outfile_without_permissions
 	test "infiles/basic.txt" "cat -e" "cat -e" "outfiles/outfile_without_permissions"
+	test "infiles/basic.txt" "sleep 3" "cat -e" "outfiles/outfile_without_permissions"
+	test "nonexistingfile" "cat -e" "cat -e" "outfiles/outfile_without_permissions"
 # wrong argument
 test "infiles/basic.txt" "nonexistingcommand" "cat -e" "outfiles/outfile"
 test "infiles/basic.txt" "cat -e" "nonexistingcommand" "outfiles/outfile"
