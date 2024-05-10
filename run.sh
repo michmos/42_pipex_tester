@@ -28,7 +28,7 @@ test "infiles/basic.txt" "sleep 3" "ls" "outfiles/outfile"
 test "infiles/big_text.txt" "cat" "head -2" "outfiles/outfile"
 
 print_header "ERROR CHECKING"
-# unvalid input file
+# invalid input file
 test "nonexistingfile" "cat -e" "ls" "outfiles/outfile"
 test "nonexistingfile" "cat" "sleep 3" "outfiles/outfile"
 touch infiles/infile_without_permissions
