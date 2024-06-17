@@ -2,6 +2,9 @@
 
 source test.sh
 source utils.sh
+if [ "$1" == --help ]; then print_help && exit 0; fi
+if [ "$1" == --show-valgrind ]; then SHOW_VALGRIND=1; else SHOW_VALGRIND=0; fi
+if [ "$1" == --hide-errors ]; then HIDE_LOG=1; else HIDE_LOG=0; fi
 
 # -- SETUP ------------------------------------------------------------------------------#
 # ADJUST PATH TO PIPEX DIRECTORY IF NECESSARY (-> IF ITS NOT THE PARENT DIRCTORY)
@@ -64,4 +67,4 @@ test "here_doc" "EOF" "cat -e" "cat -e" "outfiles/outfile"
 
 
 # -- ERROR_OUTPUT -----------------------------------------------------------------------#
-if [ "$1" != --hide-errors ]; then print_err_log; fi
+if (( ${HIDE_LOG} == 0 )); then print_err_log; fi

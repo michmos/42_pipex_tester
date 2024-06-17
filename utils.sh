@@ -9,6 +9,12 @@ RESET="\033[0m"
 
 DELIMITER="------------------------------------------------------------------------------------------------------------------------"
 
+print_help () {
+	printf "${BOLD}%-20s %s${RESET}\n" "FLAG" "MEANING"
+	printf "%-20s %s\n" "--hide-errors" "hide detailed information on KOs"
+	printf "%-20s %s\n" "--show-valgrind" "show detailed valgrind output"
+}
+
 print_arg_array() {
 	local size=${#ARG_ARRAY[@]}
 
@@ -26,7 +32,7 @@ print_err_log () {
 
 print_test_case() {
 	printf "${RED}%s\n" "$DELIMITER" 
-	printf "test %i:\n${RESET}" ${TEST_NUM}
+	printf "TEST %i:\n${RESET}" ${TEST_NUM}
 
 	printf "${BOLD}./pipex "
 	print_arg_array
