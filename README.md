@@ -18,12 +18,21 @@ Alternatively, you can clone it elsewhere and adjust the relative path inside `r
 Ensure you have a Makefile in place and that your program compiles to `pipex` (also the bonus, in case you did it).
 
 ### Run
+Run the tester like this:
 ```
 bash run.sh
 ```
-By default, the tester displays information for each test case that fails. You can disable this optionally:
+
+The behaviour can be modified by adding ONE of the following flags:
+| Flag              | Meaning                                                              | 
+| ----------------- | -------------------------------------------------------------------- |
+| `--help`          | display all flags and their usage                                    |
+| `--hide-err-log`  | hide error log                                                       |
+| `--show-valgrind` | show valgrind output for tests cases where valgrind found an error   |
+
+e.g.:
 ```
-bash run.sh --hide-errors
+bash run.sh --show-valgrind
 ```
 
 ## Layout
