@@ -141,7 +141,7 @@ result_leaks() {
 		ERROR_FLAG=1
 		if ((exit_status == 42)); then
 			printf "${RED}%-8s${RESET}\n" "[KO]"
-			cat "${temp_file}" | grep 'HEAP SUMMARY' -A9 --max-count=1 >> last_err_log.txt
+			cat "${temp_file}" >> last_err_log.txt
 			printf "\n" >> last_err_log.txt
 		else
 			printf "${RED}%-8s${RESET}\n" "[KO]"
