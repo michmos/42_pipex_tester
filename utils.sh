@@ -11,7 +11,7 @@ DELIMITER="---------------------------------------------------------------------
 
 print_help () {
 	printf "${BOLD}%-20s %s${RESET}\n" "FLAG" "MEANING"
-	printf "%-20s %s\n" "--hide-errors" "hide detailed information on KOs"
+	printf "%-20s %s\n" "--hide-err-log" "hide detailed information on KOs"
 	printf "%-20s %s\n" "--show-valgrind" "show detailed valgrind output"
 }
 

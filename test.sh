@@ -55,7 +55,7 @@ test () {
 		# read permissions are necessary for cp and diff operations
 		chmod u+r $OUTPUTFILE
 		if [ -w "$OUTPUTFILE" ]; then
-			echo -e "This is random text echoed into existing outfiles before \napplying pipex. This allows to verify whether your program\n and the original successfully replace existing text" > $OUTPUTFILE
+			echo -e "This is random text echoed into existing outfiles before \napplying pipex. This allows to verify whether your program\nand the original replace or append existing text" > $OUTPUTFILE
 		fi
 		cp $OUTPUTFILE $OUTPUTFILE1
 	fi
