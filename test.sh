@@ -78,7 +78,7 @@ ${HERE_DOC}" 2> /dev/null
 	local time_og=$SECONDS
 
 	# get and print results
-	if (( exit_status_my > 128 )); then printf "${RED}------- FATAL ERROR -------\n${RESET}"; return; fi
+	if (( exit_status_my > 128 && exit_status_my < 250 )); then printf "${RED}------- FATAL ERROR -------\n${RESET}"; return; fi
 	if (( LEAKS_ONLY == 0 )); then
 		if [[ ! -f $OUTPUTFILE ]]; then printf "${RED}-- DIDN'T CREATE OUTFILE --\n${RESET}"; return; fi
 		result_output
