@@ -135,16 +135,16 @@ result_time() {
 result_leaks() {
 	local temp_file=$(mktemp)
 	local timeout=$(($TIMEOUT + 3))
-	timeout $TIMEOUT valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all --error-exitcode=42 ./pipex "${ARG_ARRAY[@]}" < <(echo -n "${HERE_DOC}") > /dev/null
-	local exit_status=$?
-	if ((exit_status != 42)) && ((exit_status != 124)); then
-		printf "${GREEN}%-8s${RESET}\n" "[OK]"
-	else
+	timeout $TIMEOUT valgrind --log-file=${temp_file} --leak-check=full --errors-for-leak-kinds=all ./pipex "${ARG_ARRAY[@]}" < <(echo -n "${HERE_DOC}") > /dev/null
+	local timeout=$?
+	if grep -q "ERROR SUMMARY: [^0]" "${temp_file}"; then
 		if (( ${ERROR_FLAG} == 0 )); then print_test_case >> last_err_log.txt; fi
 		ERROR_FLAG=1
 		printf "${RED}%-8s${RESET}\n" "[KO]"
 		printf "${RED}%-8s${RESET}\n" "Leaks:" >> last_err_log.txt
-		if ((exit_status == 42)); then
+		if ((timeout == 124)); then
+			printf "Valgrind timeouts\n" >> last_err_log.txt
+		else
 			if (( ${SHOW_VALGRIND} == 1 )); then
 				cat "${temp_file}" >> last_err_log.txt
 				printf "\n" >> last_err_log
@@ -152,9 +152,9 @@ result_leaks() {
 				printf "Valgrind found an error. To get valgrind output, you have 2 options\na) run the tester like this: bash run.sh --show-valgrind\nb) run: valgrind --leak-check=full --errors-for-leak-kinds=all ./pipex " >> last_err_log.txt && print_arg_array >> last_err_log.txt
 				printf "\n" >> last_err_log.txt
 			fi
-		else
-			printf "Valgrind timeouts\n" >> last_err_log.txt
 		fi
+	else
+		printf "${GREEN}%-8s${RESET}\n" "[OK]"
 	fi
 	rm "${temp_file}"
 }
