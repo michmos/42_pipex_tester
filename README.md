@@ -47,7 +47,7 @@ The tester compares your program with the original shell piping in terms of:
 ## Adapt
 Test cases can easily be added to  `run.sh`  following the same structure as the existing ones.
 Two variables are available for customization:
-* `LEAKS_ONLY`: if set to 1, all subsequent test cases will only be checked for leaks and fatal errors, until it is reset to 0
+* `LEAKS_ONLY`: if set to 1, all subsequent test cases will only be checked for leaks and fatal errors, until it is reset to 0. This is especially useful for test cases that have no equivalent in bash
 * `HERE_DOC`: a string used as input for here_doc. Ensure it ends with a \n
 
 If a test case receives less than 4 arguments without setting LEAKS_ONLY to 0, an error message will be displayed as the subject doesn't clarify how to handle these cases - naturally, your program shouldn't crash.
