@@ -23,16 +23,18 @@ Run the tester like this:
 bash run.sh
 ```
 
-The behaviour can be modified by adding ONE of the following flags:
-| Flag              | Meaning                                                              | 
-| ----------------- | -------------------------------------------------------------------- |
-| `--help`          | display all flags and their usage                                    |
-| `--hide-err-log`  | hide error log                                                       |
-| `--show-valgrind` | show valgrind output for tests cases where valgrind found an error   |
+The behaviour can be modified by adding the following flags:
+| Flag                | Meaning                                                              | 
+| ------------------- | -------------------------------------------------------------------- |
+| `--help`            | display all flags and their usage                                    |
+| `--hide-err-log`    | hide error log                                                       |
+| `--show-valgrind`   | show valgrind output for tests cases where valgrind found an error   |
+| `--test=<test_num>` | run only the test number <test_num>                                  |
+
 
 e.g.:
 ```
-bash run.sh --show-valgrind
+bash run.sh --show-valgrind --test=12
 ```
 
 ## Layout
