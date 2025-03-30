@@ -5,6 +5,7 @@ source utils.sh
 if [ "$1" == --help ]; then print_help && exit 0; fi
 if [ "$1" == --show-valgrind ]; then SHOW_VALGRIND=1; else SHOW_VALGRIND=0; fi
 if [ "$1" == --hide-err-log ]; then HIDE_LOG=1; else HIDE_LOG=0; fi
+trap 'kill 0;' SIGINT
 
 # -- SETUP ------------------------------------------------------------------------------#
 # ADJUST PATH TO PIPEX DIRECTORY IF NECESSARY (-> IF ITS NOT THE PARENT DIRCTORY)
