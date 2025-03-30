@@ -9,10 +9,25 @@ RESET="\033[0m"
 
 DELIMITER="------------------------------------------------------------------------------------------------------------------------"
 
+set_flags () {
+	if [ "$1" == --help ]; then print_help && exit 0; fi
+	if [[ "$1" == "--show-valgrind" 	||  "$2" == "--show-valgrind" ]]; then SHOW_VALGRIND=1; else SHOW_VALGRIND=0; fi
+	if [[ "$1" == "--hide-err-log"  	||  "$2" == "--hide-err-log" ]]; then HIDE_LOG=1; else HIDE_LOG=0; fi
+	# check only one test
+	if [[ "$1" == --test=* ]]; then
+		TEST_NUM_ONLY="${1#--test=}"
+	elif [[ "$2" == --test=* ]]; then
+		TEST_NUM_ONLY="${2#--test=}"
+	else
+		TEST_NUM_ONLY=-1
+	fi
+}
+
 print_help () {
 	printf "${BOLD}%-20s %s${RESET}\n" "FLAG" "MEANING"
 	printf "%-20s %s\n" "--hide-err-log" "hide detailed information on KOs"
 	printf "%-20s %s\n" "--show-valgrind" "show detailed valgrind output"
+	printf "%-20s %s\n" "--test=<test_num>" "run only the test number <test_num>"
 }
 
 print_arg_array() {

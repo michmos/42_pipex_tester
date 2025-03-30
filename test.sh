@@ -16,6 +16,9 @@ ARG_STR=""
 
 test () {
 	TEST_NUM=$(( TEST_NUM + 1 ))
+	if (( TEST_NUM_ONLY > 0 )) && (( TEST_NUM != TEST_NUM_ONLY )); then
+		return
+	fi
 	ARG_ARRAY=("$@")
 	OUTPUTFILE="${ARG_ARRAY[-1]}"
 	OUTPUTFILE1="${OUTPUTFILE}_tester"
